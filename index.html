@@ -3,29 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>c2 security</title>
+    <title>Fraud Report Portal - C2 Security</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
-            </ul>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1>🛡️ Fraud Report Portal</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#report">Report Fraud</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
         </nav>
     </header>
-    <h1>c2 security</h1>    
-    <p>Welcome to the c2 security page.</p>
-    <p>This page is protected by a password. Please enter the correct password to access the page.</p>
 
-    <form>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password">
-        <button type="submit">Submit</button>
-    </form>
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h2>Report Fraud Securely</h2>
+                <p>Help us protect the community by reporting suspicious activity and fraud</p>
+                <a href="#report" class="cta-button">File a Report</a>
+            </div>
+        </section>
+
+        <!-- Fraud Report Form Section -->
+        <section id="report" class="report-section">
+            <div class="container">
+                <h2>Fraud Report Form</h2>
+                <p class="section-intro">Please provide as much detail as possible to help us investigate your report.</p>
+                
+                <form id="fraudForm" class="fraud-form">
+                    <!-- Personal Information -->
+                    <fieldset>
+                        <legend>Your Information</legend>
+                        
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reporterType">Reporter Type *</label>
+                            <select id="reporterType" name="reporterType" required>
+                                <option value="">-- Select --</option>
+                                <option value="individual">Individual</option>
+                                <option value="business">Business</option>
+                                <option value="organization">Organization</option>
+                                <option value="anonymous">Anonymous</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <!-- Fraud Details -->
+                    <fieldset>
+                        <legend>Fraud Details</legend>
+                        
+                        <div class="form-group">
+                            <label for="fraudType">Type of Fraud *</label>
+                            <select id="fraudType" name="fraudType" required>
+                                <option value="">-- Select --</option>
+                                <option value="identity_theft">Identity Theft</option>
+                                <option value="credit_card">Credit Card Fraud</option>
+                                <option value="phishing">Phishing</option>
+                                <option value="online_auction">Online Auction Fraud</option>
+                                <option value="refund">Refund Fraud</option>
+                                <option value="payment">Payment Fraud</option>
+                                <option value="check">Check Fraud</option>
+                                <option value="imposter">Imposter/Scam</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fraudDate">Date of Incident *</label>
+                            <input type="date" id="fraudDate" name="fraudDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount (USD)</label>
+                            <input type="number" id="amount" name="amount" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Detailed Description *</label>
+                            <textarea id="description" name="description" rows="6" required placeholder="Please describe what happened, who was involved, and any suspicious details..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="suspectInfo">Suspect Information</label>
+                            <textarea id="suspectInfo" name="suspectInfo" rows="4" placeholder="Name, company, phone, email, website, or any identifying information about the suspect..."></textarea>
+                        </div>
+                    </fieldset>
+
+                    <!-- Evidence -->
+                    <fieldset>
+                        <legend>Evidence & Supporting Information</legend>
+                        
+                        <div class="form-group">
+                            <label for="witnesses">Witnesses (if any)</label>
+                            <input type="text" id="witnesses" name="witnesses" placeholder="Names and contact information of witnesses">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reportedToOthers">Have you reported this to anyone else? *</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="reportedToOthers" value="yes"> Yes
+                                </label>
+                                <label>
+                                    <input type="radio" name="reportedToOthers" value="no"> No
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="reportedToGroup" style="display: none;">
+                            <label for="reportedTo">Where did you report it?</label>
+                            <input type="text" id="reportedTo" name="reportedTo" placeholder="e.g., FBI, Police, Bank, etc.">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="attachments">Additional Notes</label>
+                            <textarea id="attachments" name="attachments" rows="3" placeholder="Any additional information that may be helpful..."></textarea>
+                        </div>
+                    </fieldset>
+
+                    <!-- Privacy & Consent -->
+                    <fieldset>
+                        <legend>Privacy & Consent</legend>
+                        
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox" id="consent" name="consent" required>
+                                I understand this information will be used to investigate fraud and may be shared with relevant authorities. *
+                            </label>
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox" id="privacy" name="privacy" required>
+                                I have read and agree to the privacy policy. *
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">Submit Report</button>
+                        <button type="reset" class="reset-btn">Clear Form</button>
+                    </div>
+                </form>
+
+                <!-- Status Messages -->
+                <div id="statusMessage" class="status-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <h3>✓ Report Submitted Successfully</h3>
+                    <p>Thank you for your report. We will review it and take appropriate action.</p>
+                    <p>Reference ID: <span id="referenceId"></span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section">
+            <div class="container">
+                <h2>Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <h3>How long does it take to investigate a report?</h3>
+                    <p>Investigation timelines vary depending on the complexity and nature of the fraud. We typically acknowledge receipt of your report within 24 hours.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Will my identity be kept confidential?</h3>
+                    <p>Yes, we take confidentiality seriously. You can choose to remain anonymous, and we will protect your personal information in accordance with our privacy policy.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What information should I provide?</h3>
+                    <p>The more details you provide, the better we can assist. Include dates, amounts, names, email addresses, phone numbers, websites, transaction details, and any communications with the suspect.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Can I report anonymously?</h3>
+                    <p>Yes. Select "Anonymous" in the Reporter Type field. Note that without contact information, we may have limited ability to follow up with you.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What happens after I submit my report?</h3>
+                    <p>Your report will be reviewed by our team. Depending on the nature of the fraud, it may be forwarded to relevant law enforcement or regulatory agencies.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Is this website secure?</h3>
+                    <p>Yes, all communications are encrypted and your data is handled securely. We do not sell or share your information with third parties.</p>
+                </div>
+            </section>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <h2>Contact Us</h2>
+                <p>If you have questions or need assistance, please reach out:</p>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>Email</h3>
+                        <p><a href="mailto:fraud@c2security.com">fraud@c2security.com</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Phone</h3>
+                        <p><a href="tel:+18005551234">1-800-555-1234</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Mailing Address</h3>
+                        <p>C2 Security<br>123 Security Lane<br>Cyber City, CC 12345</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
     <footer>
-        <p>&copy; 2023 c2 security. All rights reserved.</p>
+        <div class="footer-content">
+            <p>&copy; 2026 C2 Security. All rights reserved.</p>
+            <p><a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a></p>
+        </div>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
