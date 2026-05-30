@@ -25,6 +25,20 @@ document.addEventListener('DOMContentLoaded', function() {
     reportedToRadios.forEach(radio => {
         radio.addEventListener('change', toggleReportedToField);
     });
+
+    // Hamburger menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', toggleHamburgerMenu);
+        
+        // Close menu when clicking on a link
+        const navLinks = navMenu.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeHamburgerMenu);
+        });
+    }
 });
 
 // ===========================
@@ -207,6 +221,22 @@ function toggleReportedToField() {
             break;
         }
     }
+}
+
+function toggleHamburgerMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+}
+
+function closeHamburgerMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
 }
 
 function showLoadingMessage(message) {
