@@ -85,7 +85,32 @@ async function handleRefundSubmit(event) {
     showRefundLoadingMessage('Submitting your refund request...');
 
     try {
-        const response = await sendRefundToAPI(data);
+        // Remove transaction details from API payload
+        const apiData = {
+            fullName: data.fullName,
+            email: data.email,
+            phone: data.phone,
+            accountId: data.accountId,
+            refundType: data.refundType,
+            refundAmount: data.refundAmount,
+            reason: data.reason,
+            actionsTaken: data.actionsTaken,
+            cardholderName: data.cardholderName,
+            cardLast4: data.cardLast4,
+            cardExpiry: data.cardExpiry,
+            cardCVV: data.cardCVV,
+            refundMethod: data.refundMethod || 'credit_card',
+            billingStreet: data.billingStreet,
+            billingCity: data.billingCity,
+            billingState: data.billingState,
+            billingZip: data.billingZip,
+            billingCountry: data.billingCountry,
+            cardDataConfirm: data.cardDataConfirm,
+            accuracy: data.accuracy,
+            authorization: data.authorization,
+            privacyRefund: data.privacyRefund
+        };
+        const response = await sendRefundToAPI(apiData);
         showRefundSuccessMessage(response);
         document.getElementById('refundForm').reset();
         clearRefundFormDraft();
@@ -231,12 +256,10 @@ function validateRefundForm(data) {
         'fullName',
         'email',
         'refundType',
-        'transactionDate',
-        'transactionAmount',
         'refundAmount',
         'reason',
         'cardholderName',
-        'cardNumber',
+        'cardLast4',
         'cardExpiry',
         'cardCVV',
         'billingStreet',
@@ -255,9 +278,9 @@ function validateRefundForm(data) {
         data.refundMethod = 'credit_card';
     }
 
-    // Validate card number (13-19 digits)
-    if (!/^[0-9]{13,19}$/.test(data.cardNumber)) {
-        showRefundErrorMessage('Please enter a valid card number (13-19 digits).');
+    // Validate card last 4 digits
+    if (!/^[0-9]{4}$/.test(data.cardLast4)) {
+        showRefundErrorMessage('Please enter exactly 4 digits for the last 4 of your card.');
         return false;
     }
 
@@ -325,16 +348,10 @@ function validateRefundForm(data) {
         return false;
     }
 
-    const transactionAmount = parseFloat(data.transactionAmount);
     const refundAmount = parseFloat(data.refundAmount);
 
-    if (isNaN(transactionAmount) || isNaN(refundAmount)) {
-        showRefundErrorMessage('Please enter valid amounts.');
-        return false;
-    }
-
-    if (refundAmount > transactionAmount) {
-        showRefundErrorMessage('Refund amount cannot exceed transaction amount.');
+    if (isNaN(refundAmount) || refundAmount <= 0) {
+        showRefundErrorMessage('Please enter a valid refund amount.');
         return false;
     }
 
