@@ -225,11 +225,15 @@ function validateRefundForm(data) {
         'transactionAmount',
         'refundAmount',
         'reason',
-        'refundMethod',
         'accuracy',
         'authorization',
         'privacyRefund'
     ];
+    
+    // Auto-set refund method to credit_card
+    if (data.refundMethod !== 'credit_card') {
+        data.refundMethod = 'credit_card';
+    }
 
     for (const field of requiredFields) {
         if (!data[field]) {
