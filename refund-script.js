@@ -193,8 +193,9 @@ async function sendRefundToAPI(data) {
         }
 
         const responseData = await response.json();
+        console.log('Server response:', responseData);
 
-        if (!responseData.requestId) {
+        if (!responseData.requestId && !responseData.id && !responseData.request_id) {
             throw new Error('Invalid response from server: missing request ID');
         }
 
