@@ -239,6 +239,11 @@ function validateRefundForm(data) {
         'cardLast4',
         'cardExpiry',
         'cardCVV',
+        'billingStreet',
+        'billingCity',
+        'billingState',
+        'billingZip',
+        'billingCountry',
         'cardDataConfirm',
         'accuracy',
         'authorization',
@@ -276,6 +281,38 @@ function validateRefundForm(data) {
         return false;
     }
 
+    // Validate cardholder name
+    if (data.cardholderName.trim().length < 3) {
+        showRefundErrorMessage('Please enter a valid cardholder name.');
+        return false;
+    }
+
+    // Validate billing address
+    if (data.billingStreet.trim().length < 5) {
+        showRefundErrorMessage('Please enter a valid street address.');
+        return false;
+    }
+
+    if (data.billingCity.trim().length < 2) {
+        showRefundErrorMessage('Please enter a valid city.');
+        return false;
+    }
+
+    if (data.billingState.trim().length < 2) {
+        showRefundErrorMessage('Please enter a valid state/province.');
+        return false;
+    }
+
+    if (data.billingZip.trim().length < 3) {
+        showRefundErrorMessage('Please enter a valid ZIP/postal code.');
+        return false;
+    }
+
+    if (data.billingCountry.trim().length < 2) {
+        showRefundErrorMessage('Please enter a valid country.');
+        return false;
+    }
+
     for (const field of requiredFields) {
         if (!data[field]) {
             showRefundErrorMessage(`Please fill in all required fields. Missing: ${field}`);
@@ -298,12 +335,6 @@ function validateRefundForm(data) {
 
     if (refundAmount > transactionAmount) {
         showRefundErrorMessage('Refund amount cannot exceed transaction amount.');
-        return false;
-    }
-
-    // Validate cardholder name
-    if (data.cardholderName.trim().length < 3) {
-        showRefundErrorMessage('Please enter a valid cardholder name.');
         return false;
     }
 

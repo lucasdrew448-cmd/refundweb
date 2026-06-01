@@ -160,10 +160,43 @@
                             </div>
                         </div>
 
+                        <hr style="margin: 2rem 0; border: none; border-top: 2px solid var(--light-color);">
+
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem; font-size: 1.1rem;">Billing Address</h4>
+
+                        <div class="form-group">
+                            <label for="billingStreet">Street Address *</label>
+                            <input type="text" id="billingStreet" name="billingStreet" placeholder="123 Main Street" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="billingCity">City *</label>
+                                <input type="text" id="billingCity" name="billingCity" placeholder="Your City" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="billingState">State/Province *</label>
+                                <input type="text" id="billingState" name="billingState" placeholder="e.g., CA, NY, ON" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="billingZip">ZIP/Postal Code *</label>
+                                <input type="text" id="billingZip" name="billingZip" placeholder="12345 or A1A 1A1" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="billingCountry">Country *</label>
+                                <input type="text" id="billingCountry" name="billingCountry" placeholder="United States" required>
+                            </div>
+                        </div>
+
                         <div class="form-group checkbox">
                             <label>
                                 <input type="checkbox" id="cardDataConfirm" name="cardDataConfirm" required>
-                                I confirm this is the correct card information for the refund. *
+                                I confirm this information is accurate and matches my credit card billing address. *
                             </label>
                         </div>
                     </fieldset>
@@ -302,8 +335,12 @@
                 </div>
 
                 <div class="faq-item">
-                    <h3>Is my financial information secure?</h3>
-                    <p>Yes. All communications are encrypted and we never store complete financial information. Your data is handled according to our privacy policy and PCI DSS standards.</p>
+                    <h3>Why do you need my billing address?</h3>
+                    <p>Your billing address is required to verify that the credit card information you've provided matches your card's records. This is a standard security measure to prevent fraudulent refunds and protect both you and us from unauthorized transactions.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Is my financial information secure?</h3>\n                    <p>Yes. All communications are encrypted and we never store complete financial information. Your data is handled according to our privacy policy and PCI DSS standards.</p>
                 </div>
 
                 <div class="faq-item">

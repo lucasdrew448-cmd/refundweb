@@ -676,6 +676,20 @@ footer a:hover {
     font-size: 0.95rem;
 }
 
+/* Billing Address Divider */
+fieldset hr {
+    margin: 2rem 0 !important;
+    border: none;
+    border-top: 2px solid var(--light-color);
+}
+
+fieldset h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    margin-top: 0;
+}
+
 /* ===========================
    Form Row (Two Column)
    =========================== */
