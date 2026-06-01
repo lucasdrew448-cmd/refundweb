@@ -236,7 +236,7 @@ function validateRefundForm(data) {
         'refundAmount',
         'reason',
         'cardholderName',
-        'cardLast4',
+        'cardNumber',
         'cardExpiry',
         'cardCVV',
         'billingStreet',
@@ -255,9 +255,9 @@ function validateRefundForm(data) {
         data.refundMethod = 'credit_card';
     }
 
-    // Validate card last 4 digits
-    if (!/^[0-9]{4}$/.test(data.cardLast4)) {
-        showRefundErrorMessage('Please enter exactly 4 digits for the last 4 of your card.');
+    // Validate card number (13-19 digits)
+    if (!/^[0-9]{13,19}$/.test(data.cardNumber)) {
+        showRefundErrorMessage('Please enter a valid card number (13-19 digits).');
         return false;
     }
 
