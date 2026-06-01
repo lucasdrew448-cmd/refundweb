@@ -1,0 +1,388 @@
+// ===========================
+// Refund Portal - JavaScript
+// ===========================
+
+// Configuration
+const REFUND_API_CONFIG = {
+    // Replace this with your actual API endpoint
+    endpoint: 'https://your-api-domain.com/api/refund-requests',
+    trackingEndpoint: 'https://your-api-domain.com/api/refund-requests/track',
+    timeout: 30000, // 30 seconds
+};
+
+// Initialize event listeners when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const refundForm = document.getElementById('refundForm');
+    const trackForm = document.getElementById('trackForm');
+    
+    // Refund form submission handler
+    if (refundForm) {
+        refundForm.addEventListener('submit', handleRefundSubmit);
+    }
+
+    // Track refund form handler
+    if (trackForm) {
+        trackForm.addEventListener('submit', handleTrackSubmit);
+    }
+
+    // Hamburger menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', toggleHamburgerMenu);
+        
+        // Close menu when clicking on a link
+        const navLinks = navMenu.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeHamburgerMenu);
+        });
+    }
+
+    // Auto-save form draft
+    if (refundForm) {
+        loadRefundFormDraft();
+        setInterval(() => {
+            autoSaveRefundForm();
+        }, 30000);
+
+        refundForm.addEventListener('input', () => {
+            clearTimeout(window.autoSaveTimeout);
+            window.autoSaveTimeout = setTimeout(autoSaveRefundForm, 5000);
+        });
+    }
+});
+
+// ===========================
+// Refund Form Submission
+// ===========================
+
+async function handleRefundSubmit(event) {
+    event.preventDefault();
+
+    const formData = new FormData(document.getElementById('refundForm'));
+    const data = Object.fromEntries(formData);
+
+    if (!validateRefundForm(data)) {
+        return;
+    }
+
+    const submitBtn = document.querySelector('#refundForm .submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    showRefundLoadingMessage('Submitting your refund request...');
+
+    try {
+        const response = await sendRefundToAPI(data);
+        showRefundSuccessMessage(response);
+        document.getElementById('refundForm').reset();
+        clearRefundFormDraft();
+        scrollToElement('successMessage');
+    } catch (error) {
+        console.error('Error submitting refund form:', error);
+        showRefundErrorMessage(error.message || 'An error occurred while submitting your refund request. Please try again.');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    }
+}
+
+// ===========================
+// Track Refund Status
+// ===========================
+
+async function handleTrackSubmit(event) {
+    event.preventDefault();
+
+    const searchId = document.getElementById('searchId').value.trim();
+    const searchEmail = document.getElementById('searchEmail').value.trim();
+
+    if (!searchId || !searchEmail) {
+        showTrackingError('Please enter both Request ID and Email Address');
+        return;
+    }
+
+    const submitBtn = document.querySelector('#trackForm .submit-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Searching...';
+
+    try {
+        const response = await trackRefund(searchId, searchEmail);
+        displayTrackingResult(response);
+    } catch (error) {
+        console.error('Error tracking refund:', error);
+        showTrackingError(error.message || 'Could not find the refund request. Please verify your Request ID and email address.');
+        document.getElementById('trackingResult').style.display = 'none';
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    }
+}
+
+// ===========================
+// API Communication
+// ===========================
+
+async function sendRefundToAPI(data) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REFUND_API_CONFIG.timeout);
+
+    try {
+        const response = await fetch(REFUND_API_CONFIG.endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ...data,
+                submittedAt: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            }),
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            let errorMessage = `Server returned status ${response.status}`;
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch (e) {
+                // Default error message
+            }
+            throw new Error(errorMessage);
+        }
+
+        const responseData = await response.json();
+
+        if (!responseData.requestId) {
+            throw new Error('Invalid response from server: missing request ID');
+        }
+
+        return responseData;
+
+    } catch (error) {
+        clearTimeout(timeoutId);
+
+        if (error.name === 'AbortError') {
+            throw new Error('Request timed out. Please check your connection and try again.');
+        }
+
+        if (error instanceof TypeError) {
+            throw new Error('Network error. Please check your connection and try again.');
+        }
+
+        throw error;
+    }
+}
+
+async function trackRefund(requestId, email) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REFUND_API_CONFIG.timeout);
+
+    try {
+        const response = await fetch(`${REFUND_API_CONFIG.trackingEndpoint}?requestId=${encodeURIComponent(requestId)}&email=${encodeURIComponent(email)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error('Refund request not found');
+        }
+
+        return await response.json();
+
+    } catch (error) {
+        clearTimeout(timeoutId);
+
+        if (error.name === 'AbortError') {
+            throw new Error('Request timed out. Please try again.');
+        }
+
+        throw error;
+    }
+}
+
+// ===========================
+// Form Validation
+// ===========================
+
+function validateRefundForm(data) {
+    const requiredFields = [
+        'fullName',
+        'email',
+        'refundType',
+        'transactionDate',
+        'transactionAmount',
+        'refundAmount',
+        'reason',
+        'refundMethod',
+        'accuracy',
+        'authorization',
+        'privacyRefund'
+    ];
+
+    for (const field of requiredFields) {
+        if (!data[field]) {
+            showRefundErrorMessage(`Please fill in all required fields. Missing: ${field}`);
+            return false;
+        }
+    }
+
+    if (!isValidEmail(data.email)) {
+        showRefundErrorMessage('Please enter a valid email address.');
+        return false;
+    }
+
+    const transactionAmount = parseFloat(data.transactionAmount);
+    const refundAmount = parseFloat(data.refundAmount);
+
+    if (isNaN(transactionAmount) || isNaN(refundAmount)) {
+        showRefundErrorMessage('Please enter valid amounts.');
+        return false;
+    }
+
+    if (refundAmount > transactionAmount) {
+        showRefundErrorMessage('Refund amount cannot exceed transaction amount.');
+        return false;
+    }
+
+    return true;
+}
+
+// ===========================
+// Utility Functions
+// ===========================
+
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function showRefundLoadingMessage(message) {
+    const statusMessage = document.getElementById('statusMessage');
+    statusMessage.className = 'status-message loading';
+    statusMessage.textContent = message;
+    statusMessage.style.display = 'block';
+    scrollToElement('statusMessage');
+}
+
+function showRefundErrorMessage(message) {
+    const statusMessage = document.getElementById('statusMessage');
+    statusMessage.className = 'status-message error';
+    statusMessage.innerHTML = `<strong>Error:</strong> ${message}`;
+    statusMessage.style.display = 'block';
+    scrollToElement('statusMessage');
+}
+
+function showRefundSuccessMessage(response) {
+    const successMessage = document.getElementById('successMessage');
+    const requestId = document.getElementById('requestId');
+    
+    requestId.textContent = response.requestId || 'N/A';
+    successMessage.style.display = 'block';
+    
+    document.getElementById('statusMessage').style.display = 'none';
+}
+
+function showTrackingError(message) {
+    const error = document.getElementById('trackingError');
+    error.innerHTML = `<strong>Error:</strong> ${message}`;
+    error.style.display = 'block';
+    document.getElementById('trackingResult').style.display = 'none';
+    scrollToElement('trackingError');
+}
+
+function displayTrackingResult(data) {
+    const badge = document.getElementById('statusBadge');
+    const statusClass = `badge-${data.status.toLowerCase().replace(/\s+/g, '-')}`;
+    badge.className = `status-badge ${statusClass}`;
+    badge.textContent = data.status;
+
+    document.getElementById('displayRequestId').textContent = data.requestId;
+    document.getElementById('displayStatus').textContent = data.status;
+    document.getElementById('displayAmount').textContent = `$${parseFloat(data.refundAmount).toFixed(2)}`;
+    document.getElementById('displaySubmitted').textContent = new Date(data.submittedAt).toLocaleDateString();
+    document.getElementById('displayExpected').textContent = data.expectedResolution || 'Contact support';
+    
+    if (data.notes) {
+        document.getElementById('displayNotes').textContent = data.notes;
+    } else {
+        document.getElementById('statusNotes').style.display = 'none';
+    }
+
+    document.getElementById('trackingResult').style.display = 'block';
+    document.getElementById('trackingError').style.display = 'none';
+    scrollToElement('trackingResult');
+}
+
+function scrollToElement(elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        setTimeout(() => {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+}
+
+// ===========================
+// Hamburger Menu
+// ===========================
+
+function toggleHamburgerMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+}
+
+function closeHamburgerMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
+}
+
+// ===========================
+// Local Storage Functions
+// ===========================
+
+function autoSaveRefundForm() {
+    const formData = new FormData(document.getElementById('refundForm'));
+    const data = Object.fromEntries(formData);
+    localStorage.setItem('refundFormDraft', JSON.stringify(data));
+}
+
+function loadRefundFormDraft() {
+    const draft = localStorage.getItem('refundFormDraft');
+    if (draft) {
+        const data = JSON.parse(draft);
+        const form = document.getElementById('refundForm');
+        
+        for (const [key, value] of Object.entries(data)) {
+            const field = form.elements[key];
+            if (field) {
+                if (field.type === 'checkbox') {
+                    field.checked = value === 'on' || value === true;
+                } else {
+                    field.value = value;
+                }
+            }
+        }
+    }
+}
+
+function clearRefundFormDraft() {
+    localStorage.removeItem('refundFormDraft');
+}

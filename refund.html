@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Request - C2 Security</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <h1>💰 Refund Portal</h1>
+                </div>
+                <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Back to Fraud Report</a></li>
+                    <li><a href="#request">Request Refund</a></li>
+                    <li><a href="#track">Track Refund</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h2>Refund Request Portal</h2>
+                <p>Submit and track your refund requests securely</p>
+                <a href="#request" class="cta-button">Request Refund</a>
+            </div>
+        </section>
+
+        <!-- Refund Request Form Section -->
+        <section id="request" class="report-section">
+            <div class="container">
+                <h2>Refund Request Form</h2>
+                <p class="section-intro">Submit your refund request with detailed information about your transaction.</p>
+                
+                <form id="refundForm" class="fraud-form">
+                    <!-- Personal Information -->
+                    <fieldset>
+                        <legend>Your Information</legend>
+                        
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accountId">Account ID / Reference Number</label>
+                            <input type="text" id="accountId" name="accountId" placeholder="Your customer or account number">
+                        </div>
+                    </fieldset>
+
+                    <!-- Transaction Details -->
+                    <fieldset>
+                        <legend>Transaction Details</legend>
+                        
+                        <div class="form-group">
+                            <label for="refundType">Type of Refund Request *</label>
+                            <select id="refundType" name="refundType" required>
+                                <option value="">-- Select --</option>
+                                <option value="overcharge">Overcharge</option>
+                                <option value="duplicate">Duplicate Charge</option>
+                                <option value="service_not_provided">Service Not Provided</option>
+                                <option value="product_defective">Product Defective/Not as Described</option>
+                                <option value="unauthorized">Unauthorized Transaction</option>
+                                <option value="billing_error">Billing Error</option>
+                                <option value="subscription_cancellation">Subscription Cancellation</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="transactionDate">Transaction Date *</label>
+                            <input type="date" id="transactionDate" name="transactionDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="transactionAmount">Transaction Amount (USD) *</label>
+                            <input type="number" id="transactionAmount" name="transactionAmount" min="0.01" step="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="refundAmount">Refund Amount Requested (USD) *</label>
+                            <input type="number" id="refundAmount" name="refundAmount" min="0.01" step="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="merchantName">Merchant/Company Name</label>
+                            <input type="text" id="merchantName" name="merchantName" placeholder="Name of the business that charged you">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="transactionId">Transaction ID / Confirmation Number</label>
+                            <input type="text" id="transactionId" name="transactionId" placeholder="Reference number from receipt or invoice">
+                        </div>
+                    </fieldset>
+
+                    <!-- Refund Reason -->
+                    <fieldset>
+                        <legend>Reason for Refund</legend>
+                        
+                        <div class="form-group">
+                            <label for="reason">Detailed Reason *</label>
+                            <textarea id="reason" name="reason" rows="6" required placeholder="Please explain why you are requesting a refund and any relevant details..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="actionsTaken">Actions Taken</label>
+                            <textarea id="actionsTaken" name="actionsTaken" rows="4" placeholder="Have you contacted the merchant? What was the response?"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <!-- Refund Details -->
+                    <fieldset>
+                        <legend>Refund Method</legend>
+                        
+                        <div class="form-group">
+                            <label for="refundMethod">Preferred Refund Method *</label>
+                            <select id="refundMethod" name="refundMethod" required>
+                                <option value="">-- Select --</option>
+                                <option value="original_payment">Original Payment Method</option>
+                                <option value="credit_card">Credit Card</option>
+                                <option value="bank_transfer">Bank Transfer</option>
+                                <option value="check">Check</option>
+                                <option value="store_credit">Store Credit</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bankAccount">Bank Account Information (if applicable)</label>
+                            <textarea id="bankAccount" name="bankAccount" rows="3" placeholder="Account number and routing information (only if requesting bank transfer)"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="supportingDocuments">Supporting Documents</label>
+                            <input type="text" id="supportingDocuments" name="supportingDocuments" placeholder="List any attached receipts, invoices, or screenshots (you can email these separately)">
+                        </div>
+                    </fieldset>
+
+                    <!-- Consent -->
+                    <fieldset>
+                        <legend>Agreement</legend>
+                        
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox" id="accuracy" name="accuracy" required>
+                                I confirm that the information provided is accurate and truthful. *
+                            </label>
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox" id="authorization" name="authorization" required>
+                                I authorize the investigation of this refund request. *
+                            </label>
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox" id="privacyRefund" name="privacyRefund" required>
+                                I have read and agree to the privacy policy. *
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">Submit Refund Request</button>
+                        <button type="reset" class="reset-btn">Clear Form</button>
+                    </div>
+                </form>
+
+                <!-- Status Messages -->
+                <div id="statusMessage" class="status-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <h3>✓ Refund Request Submitted Successfully</h3>
+                    <p>Thank you for submitting your refund request. We will review it and contact you within 5-7 business days.</p>
+                    <p>Request ID: <span id="requestId"></span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Track Refund Section -->
+        <section id="track" class="report-section" style="background-color: #f9f9f9;">
+            <div class="container">
+                <h2>Track Your Refund</h2>
+                <p class="section-intro">Enter your request ID to check the status of your refund request.</p>
+                
+                <form id="trackForm" class="fraud-form">
+                    <fieldset>
+                        <legend>Search Refund Status</legend>
+                        
+                        <div class="form-group">
+                            <label for="searchId">Request ID *</label>
+                            <input type="text" id="searchId" name="searchId" placeholder="Enter your Request ID (e.g., RFD-2026-001234)" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="searchEmail">Email Address *</label>
+                            <input type="email" id="searchEmail" name="searchEmail" placeholder="Email address used for the refund request" required>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="submit-btn">Search Status</button>
+                        </div>
+                    </fieldset>
+                </form>
+
+                <div id="trackingResult" class="tracking-result" style="display: none; margin-top: 2rem;">
+                    <div class="status-badge">
+                        <span id="statusBadge"></span>
+                    </div>
+                    <div class="tracking-details">
+                        <p><strong>Request ID:</strong> <span id="displayRequestId"></span></p>
+                        <p><strong>Status:</strong> <span id="displayStatus"></span></p>
+                        <p><strong>Amount:</strong> <span id="displayAmount"></span></p>
+                        <p><strong>Submitted:</strong> <span id="displaySubmitted"></span></p>
+                        <p><strong>Expected Resolution:</strong> <span id="displayExpected"></span></p>
+                        <p id="statusNotes" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;"><strong>Notes:</strong> <span id="displayNotes"></span></p>
+                    </div>
+                </div>
+
+                <div id="trackingError" class="status-message error" style="display: none; margin-top: 2rem;"></div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="faq-section">
+            <div class="container">
+                <h2>Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <h3>How long does a refund typically take?</h3>
+                    <p>Refund processing times vary depending on the method: Credit Card refunds (3-5 business days), Bank Transfers (5-7 business days), and Checks (7-10 business days). Our review process typically takes 5-7 business days.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Can I track my refund status?</h3>
+                    <p>Yes! Use the "Track Refund" section above to check the status of your request. You'll need your Request ID and the email address associated with your request.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What if my refund is denied?</h3>
+                    <p>If your refund request is denied, we will contact you with a detailed explanation. You can appeal the decision by providing additional documentation or information.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What information do I need to provide?</h3>
+                    <p>You'll need the transaction date, amount, merchant name, transaction ID, and a detailed reason for your refund request. Supporting documents like receipts or invoices are helpful.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Can I request a refund for a credit card dispute?</h3>
+                    <p>If you've already filed a dispute with your credit card company, we recommend following their process first. However, you can also submit a refund request here for our investigation.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Is my financial information secure?</h3>
+                    <p>Yes. All communications are encrypted and we never store complete financial information. Your data is handled according to our privacy policy and PCI DSS standards.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <h2>Need Help?</h2>
+                <p>Contact our refund support team:</p>
+                
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>Email</h3>
+                        <p><a href="mailto:refunds@c2security.com">refunds@c2security.com</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Phone</h3>
+                        <p><a href="tel:+18005551234">1-800-555-1234</a></p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Hours</h3>
+                        <p>Monday - Friday: 9AM - 6PM EST<br>Saturday: 10AM - 4PM EST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 C2 Security. All rights reserved.</p>
+            <p><a href="#privacy">Privacy Policy</a> | <a href="#terms">Terms of Service</a> | <a href="index.html">Fraud Report Portal</a></p>
+        </div>
+    </footer>
+
+    <script src="refund-script.js"></script>
+</body>
+</html>

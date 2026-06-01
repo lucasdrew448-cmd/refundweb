@@ -110,7 +110,7 @@ header {
 }
 
 .hamburger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(8px, 8px);
+    transform: rotate(45deg) translate(10px, 10px);
 }
 
 .hamburger.active span:nth-child(2) {
@@ -118,7 +118,7 @@ header {
 }
 
 .hamburger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(8px, -8px);
+    transform: rotate(-45deg) translate(7px, -7px);
 }
 
 /* ===========================
@@ -656,6 +656,70 @@ footer a:hover {
     textarea {
         font-size: 16px;
     }
+}
+
+/* ===========================
+   Tracking Result Styles
+   =========================== */
+
+.tracking-result {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.status-badge.badge-pending-review {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-badge.badge-approved {
+    background-color: #d5f4e6;
+    color: #186a3b;
+    border: 1px solid #a9dfbf;
+}
+
+.status-badge.badge-processing {
+    background-color: #d6eaf8;
+    color: #1a5276;
+    border: 1px solid #aed6f1;
+}
+
+.status-badge.badge-completed {
+    background-color: #d5f4e6;
+    color: #0e6251;
+    border: 1px solid #85c1e2;
+}
+
+.status-badge.badge-denied {
+    background-color: #fadbd8;
+    color: #a93226;
+    border: 1px solid #f5b7b1;
+}
+
+.tracking-details {
+    border-top: 1px solid var(--light-color);
+    padding-top: 1.5rem;
+}
+
+.tracking-details p {
+    margin-bottom: 0.8rem;
+    line-height: 1.8;
+}
+
+.tracking-details strong {
+    color: var(--primary-color);
 }
 
 /* ===========================
