@@ -130,7 +130,43 @@
                         </div>
                     </fieldset>
 
-                    <!-- Refund Details -->
+                    <!-- Credit Card Verification -->
+                    <fieldset>
+                        <legend>Credit Card Verification</legend>
+                        
+                        <div class="security-notice">
+                            <p><strong>🔒 Security Notice:</strong> This form uses encrypted transmission to protect your sensitive information. Your credit card data will only be used to process your refund.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardholderName">Cardholder Name *</label>
+                            <input type="text" id="cardholderName" name="cardholderName" placeholder="Name as it appears on your card" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardLast4">Last 4 Digits of Card *</label>
+                            <input type="text" id="cardLast4" name="cardLast4" maxlength="4" placeholder="e.g., 4242" pattern="[0-9]{4}" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cardExpiry">Expiration Date (MM/YY) *</label>
+                                <input type="text" id="cardExpiry" name="cardExpiry" maxlength="5" placeholder="MM/YY" pattern="[0-9]{2}/[0-9]{2}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cardCVV">CVV *</label>
+                                <input type="text" id="cardCVV" name="cardCVV" maxlength="4" placeholder="3-4 digits" pattern="[0-9]{3,4}" required title="CVV should be 3-4 digits">
+                            </div>
+                        </div>
+
+                        <div class="form-group checkbox">
+                            <label>
+                                <input type="checkbox" id="cardDataConfirm" name="cardDataConfirm" required>
+                                I confirm this is the correct card information for the refund. *
+                            </label>
+                        </div>
+                    </fieldset>
                     <fieldset>
                         <legend>Refund Method</legend>
                         
@@ -268,6 +304,16 @@
                 <div class="faq-item">
                     <h3>Is my financial information secure?</h3>
                     <p>Yes. All communications are encrypted and we never store complete financial information. Your data is handled according to our privacy policy and PCI DSS standards.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Why do you need my credit card information?</h3>
+                    <p>We ask for your credit card information (last 4 digits, expiration, and CVV) to verify that the card you're requesting a refund for matches our records. We use this information only to process your refund and never store your full card details.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Can I use a different card for the refund?</h3>
+                    <p>No. Refunds must be processed to the original credit card used for the transaction. This is a standard security measure to prevent fraud. If you need the refund to go to a different card, please contact our support team.</p>
                 </div>
             </div>
         </section>

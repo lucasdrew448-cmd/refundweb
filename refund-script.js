@@ -2,6 +2,16 @@
 // Refund Portal - JavaScript
 // ===========================
 
+// IMPORTANT: Security Notice
+// In production, credit card data should NEVER be sent directly to your backend.
+// You must use a secure payment processor like Stripe, Square, or PayPal to tokenize
+// the card data before sending it to your server. This ensures compliance with PCI DSS.
+// 
+// For production implementation:
+// 1. Integrate Stripe Elements (https://stripe.com/docs/stripe-js)
+// 2. Use Stripe tokenization to get a token
+// 3. Send only the token to your backend, never raw card data
+
 // Configuration
 const REFUND_API_CONFIG = {
     // Replace this with your actual API endpoint
@@ -225,6 +235,11 @@ function validateRefundForm(data) {
         'transactionAmount',
         'refundAmount',
         'reason',
+        'cardholderName',
+        'cardLast4',
+        'cardExpiry',
+        'cardCVV',
+        'cardDataConfirm',
         'accuracy',
         'authorization',
         'privacyRefund'
@@ -233,6 +248,32 @@ function validateRefundForm(data) {
     // Auto-set refund method to credit_card
     if (data.refundMethod !== 'credit_card') {
         data.refundMethod = 'credit_card';
+    }
+
+    // Validate card last 4 digits
+    if (!/^[0-9]{4}$/.test(data.cardLast4)) {
+        showRefundErrorMessage('Please enter exactly 4 digits for the last 4 of your card.');
+        return false;
+    }
+
+    // Validate card expiry format (MM/YY)
+    if (!/^[0-9]{2}\/[0-9]{2}$/.test(data.cardExpiry)) {
+        showRefundErrorMessage('Please enter expiry date in MM/YY format.');
+        return false;
+    }
+
+    // Validate expiry is not in the past
+    const [expMonth, expYear] = data.cardExpiry.split('/');
+    const expDate = new Date(2000 + parseInt(expYear), parseInt(expMonth) - 1);
+    if (expDate < new Date()) {
+        showRefundErrorMessage('Your card expiration date has passed. Please use a valid card.');
+        return false;
+    }
+
+    // Validate CVV
+    if (!/^[0-9]{3,4}$/.test(data.cardCVV)) {
+        showRefundErrorMessage('Please enter a valid CVV (3-4 digits).');
+        return false;
     }
 
     for (const field of requiredFields) {
@@ -257,6 +298,12 @@ function validateRefundForm(data) {
 
     if (refundAmount > transactionAmount) {
         showRefundErrorMessage('Refund amount cannot exceed transaction amount.');
+        return false;
+    }
+
+    // Validate cardholder name
+    if (data.cardholderName.trim().length < 3) {
+        showRefundErrorMessage('Please enter a valid cardholder name.');
         return false;
     }
 
