@@ -277,7 +277,7 @@ For issues or questions, contact: fraud@c2security.com
 
 ## License
 
-© 2026 C2 Security. All rights reserved.
+© 2026 C2 Cybersecurity. All rights reserved.
 
 ---
 

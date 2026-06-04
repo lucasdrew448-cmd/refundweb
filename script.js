@@ -415,14 +415,7 @@ window.addEventListener('offline', () => {
 // Accessibility Enhancements
 // ===========================
 
-// Add skip to main content link
-document.addEventListener('DOMContentLoaded', function() {
-    const skipLink = document.createElement('a');
-    skipLink.href = '#main';
-    skipLink.textContent = 'Skip to main content';
-    skipLink.className = 'skip-link';
-    document.body.insertBefore(skipLink, document.body.firstChild);
-});
+
 
 // Add CSS for skip link (add to styles.css)
 // .skip-link {
